@@ -9,7 +9,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "size": "gzip -c dist/zjax.min.js | wc -c | awk '{print \"Gzipped and minified size: \" $1 / 1024 \" KB\"}'",
-    "semver": "node script/semver.cjs"
+    "semver": "node script/semver.cjs",
+    "test": "playwright test"
   },
   "files": [
     "dist/zjax.min.js",
