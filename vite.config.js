@@ -1,12 +1,13 @@
 // vite.config.js
 import { defineConfig } from "vite";
+import istanbul from "vite-plugin-istanbul";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   build: {
     lib: {
       entry: "src/main.js", // Your main library entry file
       name: "zjax", // The global variable name (e.g., window.zjax)
-      fileName: () => `zjax.min.js`, // Output file name
+      fileName: () => mode === 'test' ? 'zjax.debug.js' : 'zjax.min.js', // Output file name
       formats: ["iife"], // Output format: IIFE
     },
     rollupOptions: {
@@ -17,10 +18,15 @@ export default defineConfig({
         // },
       },
     },
-    minify: true,
-    emptyOutDir: true,
+    minify: mode !== 'test',
+    sourcemap: mode === 'test' && 'inline',
+    emptyOutDir: mode !== 'test',
   },
   plugins: [
+    istanbul({
+      include: mode === 'test' ? 'src/*' : '',
+      forceBuildInstrument: mode === 'test',
+    }),
     {
       name: "test-404",
       configureServer(server) {
@@ -64,4 +70,4 @@ export default defineConfig({
       },
     },
   ],
-});
+}));
