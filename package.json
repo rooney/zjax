@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "size": "gzip -c dist/zjax.min.js | wc -c | awk '{print \"Gzipped and minified size: \" $1 / 1024 \" KB\"}'",
     "semver": "node script/semver.cjs",
-    "test": "playwright test"
+    "test": "rm -fr coverage && mkdir -p coverage/output && VITE_COVERAGE=true vite build && playwright test && node script/test-report.cjs"
   },
   "files": [
     "dist/zjax.min.js",
@@ -27,6 +27,7 @@
   "license": "MIT",
   "devDependencies": {
     "@playwright/test": "^1.58.1",
+    "monocart-coverage-reports": "^2.12.9",
     "express": "^5.1.0",
     "multer": "^1.4.5-lts.2",
     "nodemon": "^3.1.10",
