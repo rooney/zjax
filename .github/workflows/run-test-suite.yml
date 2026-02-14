@@ -1,5 +1,4 @@
-name: Test Suite
-
+name: Run Test Suite
 on:
   pull_request:
     branches: [main]
