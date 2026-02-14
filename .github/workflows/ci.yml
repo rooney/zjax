@@ -1,0 +1,27 @@
+# CI: tests, coverage (90% required), patch coverage (all changed lines must be covered), PR comment.
+# To disable merge when checks fail: add a branch protection rule and require the "Test & Coverage" status check (see .github/COVERAGE_CHECKS.md).
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test & Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+      - run: git fetch origin ${{ github.base_ref }}
+      - run: node script/patch-coverage.cjs
