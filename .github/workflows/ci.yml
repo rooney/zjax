@@ -1,7 +1,3 @@
-# CI: tests, coverage (90% required), patch coverage (all changed lines must be covered), PR comment.
-# To disable merge when checks fail: add a branch protection rule and require the "Test & Coverage" status check (see .github/COVERAGE_CHECKS.md).
-name: CI
-
 on:
   pull_request:
     branches: [main]
