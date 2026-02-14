@@ -26,11 +26,18 @@
   "author": "Codepilot SF",
   "license": "MIT",
   "devDependencies": {
+    "@atakama/cover-diff": "^1.2.3",
     "@playwright/test": "^1.58.1",
-    "monocart-coverage-reports": "^2.12.9",
     "express": "^5.1.0",
+    "monocart-coverage-reports": "^2.12.9",
     "multer": "^1.4.5-lts.2",
     "nodemon": "^3.1.10",
     "vite": "^6.2.0"
+  },
+  "@atakama/cover-diff": {
+    "lines": 100,
+    "branches": 100,
+    "functions": 100,
+    "lcovFile": "coverage/report/lcov.info"
   }
 }
