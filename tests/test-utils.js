@@ -1,28 +1,37 @@
-import playwright from '@playwright/test';
-import { dirname, resolve } from "path";
-import { fileURLToPath } from 'url';
-import { writeFileSync } from "fs";
+import { writeFile } from 'fs/promises';
+import path from 'path';
 
-const thisDir = dirname(fileURLToPath(import.meta.url));
+import { addCoverageReport } from 'monocart-reporter';
+import { expect } from '@playwright/test';
+import slugify from '@sindresorhus/slugify';
+
+const projectRoot = process.cwd();
+const testsDir = path.join(projectRoot, 'tests');
 
 export function withHtml(htmlBody, testBody) {
-  return async function({page}, testInfo) {
-    const htmlFile = resolve(thisDir, testInfo.title.replaceAll(' ', '-') + '.html');
-    writeFileSync(htmlFile, `
+  return async function ({ page }, testInfo) {
+    const htmlFile = path.join(testsDir, `${slugify(testInfo.title)}.html`);
+    const htmlContent = `
+      <!DOCTYPE html>
       <html>
         <head>
           <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
-          <script src="../dist/zjax.min.js"></script>
+          <script src="../dist/zjax.debug.js"></script>
         </head>
         <body>
-          <div>` + htmlBody + `</div>
+          <div> ${htmlBody} </div>
         </body>
       </html>
-    `, 'utf-8');
-
-    await page.goto('file://' + htmlFile);
-    await testBody(page, function(selector) {
-      return playwright.expect(page.locator(selector));
-    });
+    `;
+    await writeFile(htmlFile, htmlContent, 'utf-8');
+    await runTest(page, htmlFile, testBody, testInfo);
   };
+}
+
+async function runTest(page, htmlFile, testBody, testInfo) {
+  await page.coverage.startJSCoverage();
+  await page.goto(`file://${htmlFile}`);
+  await testBody(page, (selector) => expect(page.locator(selector)));
+  const coverageData = await page.coverage.stopJSCoverage();
+  await addCoverageReport(coverageData, testInfo);
 }
