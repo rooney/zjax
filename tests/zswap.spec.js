@@ -1,20 +1,24 @@
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { withHtml } from './test-utils';
 
-test('z-swap on click', withHtml(
+test(`z-swap on click`, withHtml(
   `
-    <a href="https://httpbin.org/html" z-swap="@click.prevent p">Fetch Moby Dick</a>
-    <p>This will be replaced by Zjax.</p>
+    <a href="moby.htm" z-swap="@click.prevent p">Fetch Moby Dick</a>
+    <p>This will be replaced by Zjax</p>
   `,
-  async (page, expect) => {
-    await expect("text=Fetch Moby Dick").toBeVisible();
-    await expect("text=This will be replaced by Zjax").toBeVisible();
-    await expect("text=Availing himself of the mild").not.toBeVisible();
+  async (page) => {
+    const fetcher = page.getByText('Fetch Moby Dick');
+    const placeholder = page.getByText('This will be replaced by Zjax');
+    const mobyDick = page.getByText('Oh, Death, why canst thou not sometimes be timely?');
 
-    await page.click("text=Fetch Moby Dick");
+    await expect(fetcher).toBeVisible();
+    await expect(placeholder).toBeVisible();
+    await expect(mobyDick).not.toBeVisible();
 
-    await expect("text=Fetch Moby Dick").toBeVisible();
-    await expect("text=This will be replaced by Zjax").not.toBeVisible();
-    await expect("text=Availing himself of the mild").toBeVisible();
-  }
+    await fetcher.click();
+
+    await expect(fetcher).toBeVisible();
+    await expect(placeholder).not.toBeVisible();
+    await expect(mobyDick).toBeVisible();
+  },
 ));
