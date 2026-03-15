@@ -14,7 +14,7 @@ if (process.env.COVERAGE) {
         entryFilter: _ => _.url.startsWith(baseURL + '/src'),
         sourcePath: (path) => findFiles(`src/**/${path}`)[0] ?? path,
         onEnd: (result) => {
-          if (result.reportPath && fs.existsSync(result.reportPath)) {
+          if (fs.existsSync(result.reportPath)) {
             let html = fs.readFileSync(result.reportPath, 'utf-8');
             const hideUrlColumn = `
               <style>
@@ -33,7 +33,6 @@ if (process.env.COVERAGE) {
 }
 
 export default defineConfig({ 
-  reporter,
   use: { baseURL },
   webServer: {
     url: baseURL,
