@@ -245,7 +245,9 @@ function getResponseAndTargetNodes(responseDOM, swap) {
   }
 
   const responseNode =
-    swap.response === "*" ? responseDOM : responseDOM.querySelector(swap.response);
+    swap.response === "*" || responseDOM.matches && responseDOM.matches(swap.response) ?
+      responseDOM :
+      responseDOM.querySelector(swap.response);
 
   // Make sure there's a valid target node for all swap types except "none"
   if (!targetNode && swap.swapType !== "none") {
