@@ -1,3 +1,6 @@
+## 3.1.1 - 2026-08-25
+- Merge fix for z-action @action trigger
+
 
 ## 3.1.0 - 2026-08-01
 - Add @unmount trigger
