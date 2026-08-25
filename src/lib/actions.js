@@ -35,7 +35,9 @@ function getWrapperFunction(trigger) {
 
   return async function (event) {
     const handlerFunction = getActionFunction(trigger);
-    await handlerFunction(event);
+    if (await handlerFunction(event)) {
+      trigger.node.dispatchEvent(new CustomEvent('action', trigger));
+    }
   };
 }
 
