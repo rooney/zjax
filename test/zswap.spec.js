@@ -165,6 +165,34 @@ test('z-swap @mount', withHtml(
 ));
 
 /*
+  ------------
+  Test @action
+  ------------
+*/
+test(`z-swap @action`, withHtml(
+  `
+    <p>If you prefer, this can be replaced by Zjax.</p>
+    <div>
+      <button
+        z-swap="@action https://httpbin.org/html p"
+        z-action="@click return confirm('Do you want to fetch Moby Dick?')"
+      >
+        Fetch Moby Dick?
+      </button>
+    </div>
+  `,
+  expectMobyDickAfter((page) => {
+    // Register the dialog handler before triggering it
+    page.once('dialog', async (dialog) => {
+      // Accept the dialog (clicks "OK")
+      await dialog.accept();
+    });
+    // Trigger the dialog
+    page.fetcher.click();
+  })
+));
+
+/*
   -------------------------
   Test swapping from/to '*'
   -------------------------
